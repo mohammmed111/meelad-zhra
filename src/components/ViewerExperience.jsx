@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useGift, DEFAULT_GIFT_DATA } from '../context/GiftContext'
+import { DEFAULT_GIFT_DATA } from '../context/GiftContext'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 import LoveTest from './LoveTest'
 import GiftHub from './GiftHub'
 import TheBouquet from './TheBouquet'
@@ -17,22 +19,37 @@ const pageVariants = {
 export default function ViewerExperience() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { loadGift } = useGift()
-
   const [giftData, setGiftData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [currentView, setCurrentView] = useState('loveTest')
 
   useEffect(() => {
-    const data = loadGift(id)
-    if (data) {
-      setGiftData(data)
+    const fetchGift = async () => {
+      try {
+        const docRef = doc(db, 'gifts', id)
+        const docSnap = await getDoc(docRef)
+        
+        if (docSnap.exists()) {
+          setGiftData(docSnap.data())
+        } else {
+          setError(true)
+        }
+      } catch (err) {
+        console.error("Error fetching gift: ", err)
+        setError(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchGift()
     } else {
       setError(true)
+      setLoading(false)
     }
-    setLoading(false)
-  }, [id, loadGift])
+  }, [id])
 
   const navigateTo = (view) => setCurrentView(view)
 
@@ -51,13 +68,13 @@ export default function ViewerExperience() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen min-h-[100dvh] bg-pink-50">
         <motion.div
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-5xl mb-4"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-6xl mb-6 drop-shadow-lg"
         >
-          💕
+          💖
         </motion.div>
-        <p className="text-pink-500 font-semibold font-cursive text-lg">Loading your gift...</p>
+        <p className="text-pink-500 font-semibold font-cursive text-xl animate-pulse">Loading your special gift...</p>
       </div>
     )
   }
