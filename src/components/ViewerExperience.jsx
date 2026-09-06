@@ -58,6 +58,9 @@ export default function ViewerExperience() {
     ? {
         bubbleTexts: giftData.bubbleTexts || DEFAULT_GIFT_DATA.bubbleTexts,
         letterText: giftData.letterText || DEFAULT_GIFT_DATA.letterText,
+        meterLow: giftData.meterLow || DEFAULT_GIFT_DATA.meterLow,
+        meterMedium: giftData.meterMedium || DEFAULT_GIFT_DATA.meterMedium,
+        meterHigh: giftData.meterHigh || DEFAULT_GIFT_DATA.meterHigh,
         audioUrl: giftData.audioUrl || DEFAULT_GIFT_DATA.audioUrl,
         trackName: giftData.trackName || DEFAULT_GIFT_DATA.trackName,
       }
@@ -113,7 +116,14 @@ export default function ViewerExperience() {
       case 'loveTest':
         return (
           <motion.div key="loveTest" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full min-h-screen min-h-[100dvh]">
-            <LoveTest onPass={() => navigateTo('giftHub')} />
+            <LoveTest 
+              onPass={() => navigateTo('giftHub')} 
+              messages={{
+                meterLow: mergedData.meterLow,
+                meterMedium: mergedData.meterMedium,
+                meterHigh: mergedData.meterHigh
+              }}
+            />
           </motion.div>
         )
       case 'giftHub':

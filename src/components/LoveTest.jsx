@@ -199,13 +199,22 @@ function SuperHappyCat() {
 }
 
 /* ──── Slider Mood Logic ──── */
-function getCatState(value) {
-  if (value <= 24) return { Cat: SadCat, text: 'Only that much?', mood: 'sad' }
-  if (value <= 44) return { Cat: CryingCat, text: 'Only that much?', mood: 'crying' }
-  if (value <= 58) return { Cat: AnnoyedCat, text: 'That hurts...', mood: 'annoyed' }
-  if (value <= 91) return { Cat: ConfusedCat, text: 'Half? Seriously?', mood: 'confused' }
-  if (value <= 199) return { Cat: HappyCat, text: "Aww, that's more like it!", mood: 'happy' }
-  return { Cat: SuperHappyCat, text: 'Correct answer!', mood: 'superhappy' }
+function getCatState(value, customMessages = {}) {
+  let CatComp, mood;
+  if (value <= 2) { CatComp = SadCat; mood = 'sad' }
+  else if (value <= 4) { CatComp = CryingCat; mood = 'crying' }
+  else if (value <= 6) { CatComp = AnnoyedCat; mood = 'annoyed' }
+  else if (value <= 9) { CatComp = ConfusedCat; mood = 'confused' }
+  else if (value <= 20) { CatComp = HappyCat; mood = 'happy' }
+  else { CatComp = SuperHappyCat; mood = 'superhappy' }
+
+  let text = '';
+  if (value < 34) text = customMessages.meterLow || 'Only that much?';
+  else if (value < 67) text = customMessages.meterMedium || 'Half? Seriously?';
+  else if (value < 100) text = customMessages.meterHigh || "Aww, that's more like it!";
+  else text = 'Correct answer!';
+
+  return { Cat: CatComp, text, mood }
 }
 
 /* ──── Heart Thumb Overlay ──── */
@@ -244,18 +253,17 @@ function HeartThumb({ value, max, sliderRef }) {
 }
 
 /* ──── Main Component ──── */
-export default function LoveTest({ onPass }) {
+export default function LoveTest({ onPass, messages }) {
   const [value, setValue] = useState(0)
   const sliderRef = useRef(null)
-  const { Cat, text, mood } = getCatState(value)
-  const showNext = value >= 1000
+  const { Cat, text, mood } = getCatState(value, messages)
+  const showNext = value >= 100
 
-  const percent = `${value / 10}%`
-  // Map value 0-1000 to display percentage 0%-1000%
+  // Display percentage directly as value%
   const displayPercent = `${value}%`
 
-  // Calculate fill percentage for the track
-  const fillPercent = (value / 1000) * 100
+  // Calculate fill percentage for the track (since max is 100, it's just the value)
+  const fillPercent = value
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen min-h-[100dvh] bg-pink-50 px-6 py-8 overflow-hidden">
@@ -355,18 +363,18 @@ export default function LoveTest({ onPass }) {
             ref={sliderRef}
             type="range"
             min="0"
-            max="1000"
+            max="100"
             value={value}
             onChange={(e) => setValue(Number(e.target.value))}
             className="love-slider w-full relative z-[2]"
           />
-          <HeartThumb value={value} max={1000} sliderRef={sliderRef} />
+          <HeartThumb value={value} max={100} sliderRef={sliderRef} />
         </div>
 
         {/* Min/Max labels */}
         <div className="flex justify-between mt-2 text-xs text-pink-400 font-medium">
           <span>0%</span>
-          <span>1000%</span>
+          <span>100%</span>
         </div>
       </div>
 

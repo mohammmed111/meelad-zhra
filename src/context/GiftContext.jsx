@@ -14,6 +14,9 @@ export const DEFAULT_GIFT_DATA = {
   ],
   letterText:
     "My Dearest Love,\n\nThere are not enough words in this world to describe how much you mean to me. From the very first moment our eyes met, I knew that my heart had found its forever home.\n\nYou are my first thought in the morning and my last wish before I sleep. Your laughter is the sweetest melody, and your smile lights up even my darkest days. I am endlessly grateful that the universe brought us together.\n\nEvery day with you feels like a beautiful dream I never want to wake up from. You make me a better person, and I promise to spend every breath making you feel as loved and cherished as you make me feel.\n\nThank you for being my best friend, my partner, my home. I love you more than yesterday, but less than tomorrow.\n\nUntil the stars forget to shine...",
+  meterLow: 'Only that much?',
+  meterMedium: 'Half? Seriously?',
+  meterHigh: "Aww, that's more like it!",
   audioUrl: '',
   trackName: 'BIRDS OF A FEATHER - Billie Eilish',
 }

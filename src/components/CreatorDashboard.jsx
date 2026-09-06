@@ -153,6 +153,9 @@ export default function CreatorDashboard() {
   // Form state
   const [bubbleTexts, setBubbleTexts] = useState([...DEFAULT_GIFT_DATA.bubbleTexts])
   const [letterText, setLetterText] = useState(DEFAULT_GIFT_DATA.letterText)
+  const [meterLow, setMeterLow] = useState(DEFAULT_GIFT_DATA.meterLow)
+  const [meterMedium, setMeterMedium] = useState(DEFAULT_GIFT_DATA.meterMedium)
+  const [meterHigh, setMeterHigh] = useState(DEFAULT_GIFT_DATA.meterHigh)
   const [audioUrl, setAudioUrl] = useState(DEFAULT_GIFT_DATA.audioUrl)
   const [trackName, setTrackName] = useState(DEFAULT_GIFT_DATA.trackName)
 
@@ -168,6 +171,9 @@ export default function CreatorDashboard() {
       const docRef = await addDoc(collection(db, 'gifts'), {
         bubbleTexts,
         letterText,
+        meterLow,
+        meterMedium,
+        meterHigh,
         audioUrl,
         trackName,
         createdAt: Date.now()
@@ -245,6 +251,33 @@ export default function CreatorDashboard() {
                       placeholder="Enter a sweet message..."
                     />
                   ))}
+                </div>
+              </FormSection>
+
+              {/* ── Love Meter Messages ── */}
+              <FormSection title="Love Meter Messages" icon="🌡️" delay={0.2}>
+                <p className="text-pink-400 text-xs mb-4">
+                  Messages that appear as they drag the love percentage meter
+                </p>
+                <div className="space-y-3">
+                  <InputField
+                    label="Low (0% - 33%)"
+                    value={meterLow}
+                    onChange={(e) => setMeterLow(e.target.value)}
+                    placeholder="Only that much?"
+                  />
+                  <InputField
+                    label="Medium (34% - 66%)"
+                    value={meterMedium}
+                    onChange={(e) => setMeterMedium(e.target.value)}
+                    placeholder="Half? Seriously?"
+                  />
+                  <InputField
+                    label="High (67% - 100%)"
+                    value={meterHigh}
+                    onChange={(e) => setMeterHigh(e.target.value)}
+                    placeholder="Aww, that's more like it!"
+                  />
                 </div>
               </FormSection>
 
