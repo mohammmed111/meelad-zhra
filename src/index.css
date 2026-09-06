@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: 'Quicksand', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Slider Styles */
+input[type="range"].love-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+}
+
+input[type="range"].love-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #fbcfe8; /* pink-200 */
+}
+
+input[type="range"].love-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-top: -11px;
+  position: relative;
+  z-index: 10;
+}
+
+input[type="range"].love-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: #fbcfe8;
+}
+
+input[type="range"].love-slider::-moz-range-thumb {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"].love-slider::-moz-range-progress {
+  height: 10px;
+  border-radius: 999px;
+  background: #ec4899;
+}
+
+/* Watercolor background effect */
+.watercolor-bg {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(252, 231, 243, 0.8) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(251, 207, 232, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(244, 114, 182, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(253, 242, 248, 0.9) 0%, transparent 40%),
+    linear-gradient(180deg, #FDF2F8 0%, #FCE7F3 50%, #FBCFE8 100%);
+}
+
+/* Scrapbook bg */
+.scrapbook-bg {
+  background:
+    radial-gradient(circle at 15% 25%, rgba(252, 231, 243, 0.9) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(186, 230, 253, 0.4) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(253, 242, 248, 0.95) 0%, transparent 60%),
+    linear-gradient(135deg, #FDF2F8 0%, #FFF1F2 50%, #FCE7F3 100%);
+}
+
+/* Lace/floral pattern overlay */
+.lace-bg {
+  position: relative;
+}
+.lace-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 25% 25%, #ec4899 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, #ec4899 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, #ec4899 0.5px, transparent 0.5px);
+  background-size: 30px 30px, 30px 30px, 15px 15px;
+  pointer-events: none;
+}
+
+/* Polaroid frame */
+.polaroid {
+  background: white;
+  padding: 12px 12px 40px 12px;
+  box-shadow:
+    0 4px 6px -1px rgba(0,0,0,0.1),
+    0 2px 4px -2px rgba(0,0,0,0.1),
+    inset 0 0 0 1px rgba(0,0,0,0.05);
+  transform: rotate(-2deg);
+}
+
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(252, 231, 243, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: #f9a8d4;
+  border-radius: 999px;
+}
+
+/* Pulse hearts animation */
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Floating particles */
+@keyframes particleFloat {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+}
+
+.particle {
+  position: fixed;
+  pointer-events: none;
+  animation: particleFloat linear infinite;
+  z-index: 0;
+}
