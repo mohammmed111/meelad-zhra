@@ -10,8 +10,8 @@ export default function TheBouquet({ onBack, bubbleTexts }) {
   return (
     <div className="relative w-full min-h-screen bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat overflow-hidden flex flex-col" dir="rtl">
       {/* Absolute Corners */}
-      <img src="/images/corner.png" className="absolute top-0 right-0 w-64 md:w-96 lg:w-[450px] object-contain transform rotate-180 z-0 pointer-events-none animate-pulse duration-1000" alt="corner" />
-      <img src="/images/corner.png" className="absolute bottom-0 left-0 w-64 md:w-96 lg:w-[450px] object-contain z-0 pointer-events-none animate-pulse duration-1000" alt="corner" />
+      <img src="/images/corner.png" className="absolute top-0 left-0 w-64 md:w-96 lg:w-[450px] object-contain transform -scale-y-100 z-0 pointer-events-none" alt="corner" />
+      <img src="/images/corner.png" className="absolute bottom-0 right-0 w-64 md:w-96 lg:w-[450px] object-contain transform -scale-x-100 z-0 pointer-events-none" alt="corner" />
 
       {/* Top Bar - Title exactly centered with animation, Next button on the side */}
       <div className="relative z-20 flex justify-between items-center w-full max-w-[1600px] mx-auto px-8 pt-10 h-24">
@@ -33,10 +33,12 @@ export default function TheBouquet({ onBack, bubbleTexts }) {
             ))}
           </div>
 
-          {/* Column 2 (Center - MASSIVE Frame & Floating Bouquet) */}
-          <div className="relative flex items-center justify-center w-[350px] h-[450px] lg:w-[550px] lg:h-[750px] mx-4">
-            <img src="/images/frame.png" className="absolute w-full h-full object-contain drop-shadow-xl z-0" alt="frame" />
-            <img src="/images/bouquet.png" className="relative z-10 w-[280px] lg:w-[450px] object-contain drop-shadow-2xl hover:scale-110 transition-transform duration-300" alt="bouquet" />
+          {/* Column 2 (Center - MASSIVE Frame & Bouquet) */}
+          <div className="relative flex items-center justify-center mx-4">
+            <div className="relative inline-block">
+              <img src="/images/frame.png" className="w-[350px] lg:w-[550px] object-contain drop-shadow-xl" alt="frame" />
+              <img src="/images/bouquet.png" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[220px] lg:w-[380px] object-contain drop-shadow-2xl" alt="bouquet" />
+            </div>
           </div>
 
           {/* Column 3 (Visual Left in RTL - Tails point Right to bouquet) */}
