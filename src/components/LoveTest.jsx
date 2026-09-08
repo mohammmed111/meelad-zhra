@@ -64,9 +64,9 @@ export default function LoveTest({ onPass, messages }) {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-[40px] sm:text-[50px] font-bold text-rose-900 text-center"
+          className="text-[40px] sm:text-[50px] font-bold text-rose-900 text-center font-arabic"
         >
-          شكد النسبة
+          كم النسبة؟
         </motion.h1>
 
         {/* Dynamic Custom Message Text */}
@@ -77,8 +77,7 @@ export default function LoveTest({ onPass, messages }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="text-[28px] sm:text-[34px] text-rose-700 font-semibold text-center"
-            style={{ fontFamily: "'Quicksand', sans-serif" }}
+            className="text-[28px] sm:text-[34px] text-rose-700 font-semibold text-center font-arabic"
           >
             {text}
           </motion.p>
@@ -86,8 +85,7 @@ export default function LoveTest({ onPass, messages }) {
 
         {/* Percentage Display */}
         <motion.div
-          className="text-[50px] sm:text-[60px] font-black text-rose-900 tabular-nums tracking-wide leading-none"
-          style={{ fontFamily: "'Quicksand', sans-serif" }}
+          className="text-[50px] sm:text-[60px] font-black text-rose-900 tabular-nums tracking-wide leading-none font-arabic"
           key={value}
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
@@ -169,9 +167,9 @@ export default function LoveTest({ onPass, messages }) {
               fontSize="44" 
               fill="#831843" 
               textAnchor="middle" 
-              style={{ fontFamily: "'Great Vibes', 'Dancing Script', cursive", fontWeight: 400 }}
+              style={{ fontFamily: "'Marhey', 'Great Vibes', cursive", fontWeight: 400 }}
             >
-              love
+              حب
             </text>
           </svg>
 
@@ -198,7 +196,7 @@ export default function LoveTest({ onPass, messages }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onPass}
-                className="px-10 py-4 bg-[#831843] text-white font-bold rounded-full shadow-xl shadow-pink-900/40 hover:bg-[#9f1239] transition-colors text-2xl"
+                className="px-10 py-4 bg-[#831843] text-white font-bold rounded-full shadow-xl shadow-pink-900/40 hover:bg-[#9f1239] transition-colors text-2xl font-arabic"
               >
                 التالي
               </motion.button>

@@ -1,136 +1,99 @@
 import { motion } from 'framer-motion'
 
-/* ──── Gift Box SVG ──── */
-function GiftBox({ index, delay }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.7 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay: 0.3 + delay, type: 'spring', stiffness: 180, damping: 14 }}
-      whileHover={{ scale: 1.1, y: -8 }}
-      whileTap={{ scale: 0.95 }}
-      className="cursor-pointer group"
-    >
-      <div className="relative">
-        {/* Gift box body */}
-        <svg viewBox="0 0 100 110" className="w-24 h-24 md:w-28 md:h-28 drop-shadow-lg">
-          {/* Box base */}
-          <rect x="10" y="45" width="80" height="55" rx="6" fill="#BAE6FD" stroke="#7DD3FC" strokeWidth="2" />
-          {/* Box lid */}
-          <rect x="5" y="35" width="90" height="18" rx="5" fill="#BAE6FD" stroke="#7DD3FC" strokeWidth="2" />
-          {/* Vertical ribbon */}
-          <rect x="44" y="35" width="12" height="65" rx="2" fill="#F9A8D4" />
-          {/* Horizontal ribbon */}
-          <rect x="5" y="40" width="90" height="10" rx="2" fill="#F9A8D4" />
-          {/* Bow - left loop */}
-          <ellipse cx="40" cy="32" rx="12" ry="10" fill="#F472B6" stroke="#EC4899" strokeWidth="1.5" transform="rotate(-15,40,32)" />
-          {/* Bow - right loop */}
-          <ellipse cx="60" cy="32" rx="12" ry="10" fill="#F472B6" stroke="#EC4899" strokeWidth="1.5" transform="rotate(15,60,32)" />
-          {/* Bow - center */}
-          <circle cx="50" cy="35" r="5" fill="#EC4899" />
-          {/* Sparkle */}
-          <text x="75" y="30" fontSize="12" className="animate-sparkle">✨</text>
-        </svg>
-
-        {/* Label */}
-        <motion.div
-          className="mt-2 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 + delay }}
-        >
-          <span className="inline-block px-3 py-1 bg-white/70 backdrop-blur-sm rounded-full text-pink-600 font-semibold text-xs shadow-sm border border-pink-100">
-            {index === 0 ? '🌹 Bouquet' : index === 1 ? '📸 Scrapbook' : '💌 Letter'}
-          </span>
-        </motion.div>
-      </div>
-    </motion.div>
-  )
-}
-
 /* ──── Main Component ──── */
 export default function GiftHub({ onSelectGift }) {
   const gifts = [
-    { key: 'bouquet', label: 'The Bouquet' },
-    { key: 'scrapbook', label: 'The Scrapbook' },
-    { key: 'letter', label: 'The Letter' },
+    { key: 'bouquet', label: '🌹 باقة ورد' },
+    { key: 'scrapbook', label: '📸 ألبوم صور' },
+    { key: 'letter', label: '💌 رسالة' },
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen min-h-[100dvh] bg-pink-50 px-6 py-10 relative overflow-hidden">
-      {/* Decorative circles */}
-      <div className="absolute -top-20 -right-20 w-60 h-60 bg-pink-100/40 rounded-full blur-3xl" />
-      <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-rose-100/40 rounded-full blur-3xl" />
+    /* Full-screen watercolor background — matches LoveTest page */
+    <div
+      dir="rtl"
+      className="relative w-full min-h-screen min-h-[100dvh] bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center overflow-hidden px-4 py-10"
+      style={{ backgroundImage: "url('/images/bg.jpg')" }}
+    >
+      {/* Decorative Corner Images — same as page 1 */}
+      <img src="/images/flowers.png" alt="" className="absolute -bottom-4 -left-4 sm:bottom-0 sm:left-0 md:bottom-4 md:left-4 lg:bottom-8 lg:left-8 w-52 sm:w-72 lg:w-80 h-auto object-contain pointer-events-none drop-shadow-xl opacity-80 z-0" />
+      <img src="/images/bird.png" alt="" className="absolute -top-2 -right-2 sm:top-0 sm:right-0 md:top-4 md:right-4 lg:top-8 lg:right-8 w-52 sm:w-72 lg:w-80 h-auto object-contain pointer-events-none drop-shadow-lg opacity-80 z-0" />
 
-      {/* Trophy / check icon */}
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 12 }}
-        className="w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center shadow-lg shadow-pink-300/50 mb-6"
-      >
-        <span className="text-3xl">💝</span>
-      </motion.div>
+      {/* Content wrapper */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-5xl mx-auto gap-4">
 
-      {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-2xl md:text-3xl font-bold text-pink-700 mb-2 text-center font-cursive"
-      >
-        You passed the love test
-      </motion.h1>
+        {/* Main Title — Massive */}
+        <motion.h1
+          initial={{ opacity: 0, y: -30, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.15, type: 'spring', stiffness: 160, damping: 14 }}
+          className="text-5xl md:text-7xl font-black text-pink-500 mb-4 text-center drop-shadow-lg font-arabic"
+        >
+          لقد نجحتِ في الاختبار!
+        </motion.h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        className="text-pink-500 mb-10 text-center font-medium"
-      >
-        Your surprises are waiting for you ✨
-      </motion.p>
+        {/* Subtitle — Prominent */}
+        <motion.p
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="text-2xl md:text-3xl font-bold text-rose-800 mb-12 text-center font-arabic"
+        >
+          مفاجآتكِ في انتظاركِ ✨
+        </motion.p>
 
-      {/* Divider */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
-        className="w-24 h-0.5 bg-gradient-to-r from-transparent via-pink-300 to-transparent mb-10"
-      />
+        {/* Giant Gift Boxes Row */}
+        <div className="flex flex-row justify-center items-center gap-6 md:gap-12">
+          {gifts.map((gift, i) => {
+            const isCenter = i === 1
+            return (
+              <motion.div
+                key={gift.key}
+                initial={{ opacity: 0, y: 60, scale: 0.6 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{
+                  delay: 0.4 + i * 0.18,
+                  type: 'spring',
+                  stiffness: 170,
+                  damping: 14,
+                }}
+                onClick={() => onSelectGift(gift.key)}
+                className="cursor-pointer flex flex-col items-center"
+              >
+                {/* Gift Image — MASSIVE */}
+                <img
+                  src="/images/gift.png"
+                  alt={gift.label}
+                  className={`w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 object-contain cursor-pointer transform transition-transform duration-150 ease-in-out hover:scale-110 active:scale-95 ${
+                    isCenter ? '-translate-y-4' : ''
+                  }`}
+                />
 
-      {/* Gift boxes */}
-      <div className="flex gap-6 md:gap-10 items-end">
-        {gifts.map((gift, i) => (
-          <div key={gift.key} onClick={() => onSelectGift(gift.key)}>
-            <GiftBox index={i} delay={i * 0.15} />
-          </div>
-        ))}
-      </div>
+                {/* Gift Label */}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 + i * 0.15 }}
+                  className="mt-3 inline-block px-5 py-2 bg-white/70 backdrop-blur-sm rounded-full text-rose-700 font-bold text-sm md:text-base shadow-md border border-pink-200 font-arabic"
+                >
+                  {gift.label}
+                </motion.span>
+              </motion.div>
+            )
+          })}
+        </div>
 
-      {/* Tap hint */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 1, 0.5, 1] }}
-        transition={{ delay: 1.2, duration: 2, repeat: Infinity }}
-        className="mt-10 text-pink-400 text-sm font-medium"
-      >
-        Tap a gift to open it 🎁
-      </motion.p>
+        {/* Tap hint — pulsing */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 0.5, 1] }}
+          transition={{ delay: 1.4, duration: 2, repeat: Infinity }}
+          className="mt-10 text-rose-700 text-lg md:text-xl font-semibold font-arabic"
+        >
+          اضغطي على الهدية لفتحها 🎁
+        </motion.p>
 
-      {/* Bottom decorative hearts */}
-      <div className="absolute bottom-6 flex gap-4">
-        {['🌸', '💕', '🌸'].map((e, i) => (
-          <motion.span
-            key={i}
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 2, delay: i * 0.4, repeat: Infinity }}
-            className="text-xl opacity-30"
-          >
-            {e}
-          </motion.span>
-        ))}
-      </div>
+      </div>{/* End Content Wrapper */}
     </div>
   )
 }

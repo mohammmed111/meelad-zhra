@@ -9,6 +9,8 @@ export default {
       fontFamily: {
         sans: ['Quicksand', 'sans-serif'],
         cursive: ['Dancing Script', 'cursive'],
+        english: ['Fredoka', 'sans-serif'], // ضفنا الخط الإنجليزي الجديد
+        arabic: ['Marhey', 'sans-serif'],   // ضفنا الخط العربي الجديد
       },
       colors: {
         rose: {
