@@ -10,7 +10,7 @@ export default {
         sans: ['Quicksand', 'sans-serif'],
         cursive: ['Dancing Script', 'cursive'],
         english: ['Fredoka', 'sans-serif'], // ضفنا الخط الإنجليزي الجديد
-        arabic: ['Marhey', 'sans-serif'],   // ضفنا الخط العربي الجديد
+        arabic: ['"Lemonada"', 'sans-serif'],   // الخط العربي الجديد بناءً على طلبك
       },
       colors: {
         rose: {
