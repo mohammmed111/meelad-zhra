@@ -35,7 +35,7 @@ export default function GiftHub({ onSelectGift }) {
           initial={{ opacity: 0, y: -30, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 160, damping: 14 }}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-pink-500 mb-4 md:mb-6 text-center drop-shadow-lg font-arabic"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-pink-500 mb-8 md:mb-12 text-center drop-shadow-lg font-arabic whitespace-nowrap px-4"
         >
           لقد نجحتِ في الاختبار!
         </motion.h1>
