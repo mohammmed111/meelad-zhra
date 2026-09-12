@@ -44,6 +44,21 @@ function InputField({ label, value, onChange, placeholder, index }) {
   )
 }
 
+/* ──── File Upload Field ──── */
+function FileUploadField({ label, onChange }) {
+  return (
+    <div>
+      {label && <label className="block text-sm font-semibold text-pink-600 mb-1.5">{label}</label>}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={onChange}
+        className="w-full px-4 py-2 bg-white/80 border-2 border-dashed border-pink-300 rounded-xl text-pink-700 hover:bg-pink-50 focus:outline-none transition-all text-sm font-medium cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200"
+      />
+    </div>
+  )
+}
+
 /* ──── QR Code Result Card ──── */
 function QRResult({ giftId }) {
   const [copied, setCopied] = useState(false)
@@ -86,8 +101,8 @@ function QRResult({ giftId }) {
           <span className="text-2xl">💝</span>
         </motion.div>
 
-        <h2 className="text-xl font-bold text-pink-700 font-cursive mb-1">Gift Created!</h2>
-        <p className="text-pink-500 text-sm mb-6">Share this QR code with your special someone 💕</p>
+        <h2 className="text-xl font-bold text-pink-700 mb-1">تم إنشاء الهدية!</h2>
+        <p className="text-pink-500 text-sm mb-6">شارك رمز الاستجابة هذا أو الرابط مع من تحب 💕</p>
 
         {/* QR Code */}
         <motion.div
@@ -113,13 +128,13 @@ function QRResult({ giftId }) {
         </motion.div>
 
         {/* URL display */}
-        <div className="bg-pink-50/80 rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
-          <p className="text-pink-600 text-xs font-mono flex-1 truncate text-left">{fullUrl}</p>
+        <div className="bg-pink-50/80 rounded-xl px-4 py-3 mb-4 flex items-center justify-between gap-2" dir="ltr">
+          <p className="text-pink-600 text-xs font-mono truncate">{fullUrl}</p>
           <button
             onClick={handleCopy}
-            className="shrink-0 px-3 py-1.5 bg-white border border-pink-200 text-pink-600 rounded-lg text-xs font-semibold hover:bg-pink-50 active:scale-95 transition-all"
+            className="shrink-0 px-3 py-1.5 bg-white border border-pink-200 text-pink-600 rounded-lg text-xs font-semibold hover:bg-pink-50 active:scale-95 transition-all font-arabic"
           >
-            {copied ? '✓ Copied!' : 'Copy'}
+            {copied ? '✓ تم النسخ!' : 'نسخ'}
           </button>
         </div>
 
@@ -128,17 +143,17 @@ function QRResult({ giftId }) {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => navigate(`/view/${giftId}`)}
-          className="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-pink-300/50 hover:shadow-pink-400/60 transition-shadow text-sm"
+          className="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-pink-300/50 hover:shadow-pink-400/60 transition-shadow text-sm font-arabic"
         >
-          Preview My Gift →
+          معاينة الهدية ➔
         </motion.button>
 
         {/* Create another */}
         <button
           onClick={() => window.location.reload()}
-          className="mt-3 text-pink-400 text-xs font-medium hover:text-pink-600 transition-colors"
+          className="mt-3 text-pink-400 text-xs font-medium hover:text-pink-600 transition-colors font-arabic"
         >
-          ← Create another gift
+          ➔ إنشاء هدية أخرى
         </button>
       </div>
     </motion.div>
@@ -147,7 +162,6 @@ function QRResult({ giftId }) {
 
 /* ──── Main Component ──── */
 export default function CreatorDashboard() {
-  const { saveGift } = useGift()
   const [generatedId, setGeneratedId] = useState(null)
 
   // Form state
@@ -158,6 +172,17 @@ export default function CreatorDashboard() {
   const [meterHigh, setMeterHigh] = useState(DEFAULT_GIFT_DATA.meterHigh)
   const [audioUrl, setAudioUrl] = useState(DEFAULT_GIFT_DATA.audioUrl)
   const [trackName, setTrackName] = useState(DEFAULT_GIFT_DATA.trackName)
+  const [mainPhoto, setMainPhoto] = useState(DEFAULT_GIFT_DATA.mainPhoto || '')
+  const [albumCover, setAlbumCover] = useState(DEFAULT_GIFT_DATA.albumCover || '')
+
+  const handleImageUpload = (e, setPhotoState) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPhotoState(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleBubbleChange = (index, value) => {
     const updated = [...bubbleTexts]
@@ -167,6 +192,22 @@ export default function CreatorDashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate and format YouTube URL
+    let finalAudioUrl = audioUrl.trim();
+    if (finalAudioUrl.includes('youtu.be/')) {
+      const id = finalAudioUrl.split('youtu.be/')[1]?.split('?')[0];
+      if (id) {
+        finalAudioUrl = `https://www.youtube.com/watch?v=${id}`;
+      }
+    }
+    
+    // Basic validation to ensure it's a valid watch link (if it's a youtube link)
+    if (finalAudioUrl && !finalAudioUrl.includes('youtube.com/watch') && !finalAudioUrl.endsWith('.mp3')) {
+      alert("يرجى إدخال رابط يوتيوب صحيح (يجب أن يحتوي على youtube.com/watch?v=)");
+      return;
+    }
+
     try {
       const docRef = await addDoc(collection(db, 'gifts'), {
         bubbleTexts,
@@ -174,8 +215,10 @@ export default function CreatorDashboard() {
         meterLow,
         meterMedium,
         meterHigh,
-        audioUrl,
+        audioUrl: finalAudioUrl,
         trackName,
+        mainPhoto,
+        albumCover,
         createdAt: Date.now()
       })
       setGeneratedId(docRef.id)
@@ -183,12 +226,12 @@ export default function CreatorDashboard() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error("Error adding document: ", error)
-      alert("Failed to create gift. Please try again.")
+      alert("حدث خطأ أثناء إنشاء الهدية. يرجى المحاولة مرة أخرى.")
     }
   }
 
   return (
-    <div className="relative min-h-screen min-h-[100dvh] bg-pink-50 overflow-hidden">
+    <div className="relative min-h-screen min-h-[100dvh] bg-pink-50 overflow-hidden font-arabic" dir="rtl">
       {/* Background decorations */}
       <div className="absolute -top-32 -right-32 w-80 h-80 bg-pink-100/30 rounded-full blur-3xl" />
       <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-rose-100/30 rounded-full blur-3xl" />
@@ -210,11 +253,11 @@ export default function CreatorDashboard() {
           >
             <span className="text-2xl">💌</span>
           </motion.div>
-          <h1 className="text-3xl md:text-4xl font-bold text-pink-700 font-cursive mb-2">
-            Create Your Love Gift
+          <h1 className="text-3xl md:text-4xl font-bold text-pink-700 mb-2">
+            اصنع هديتك الرومانسية
           </h1>
           <p className="text-pink-500 text-sm font-medium">
-            Customize every detail and share it with your special someone 💕
+            خصص كل التفاصيل وشاركها مع من تحب 💕
           </p>
         </motion.div>
 
@@ -237,84 +280,101 @@ export default function CreatorDashboard() {
               className="space-y-6"
             >
               {/* ── Bubble Texts ── */}
-              <FormSection title="Bouquet Messages" icon="🌹" delay={0.15}>
+              <FormSection title="رسائل باقة الورد" icon="🌹" delay={0.15}>
                 <p className="text-pink-400 text-xs mb-4">
-                  These messages will float around the rose bouquet
+                  هذه الرسائل ستظهر حول باقة الورد
                 </p>
                 <div className="space-y-3">
                   {bubbleTexts.map((text, i) => (
                     <InputField
                       key={i}
-                      label={`Bubble ${i + 1}`}
+                      label={`الفقاعة ${i + 1}`}
                       value={text}
                       onChange={(e) => handleBubbleChange(i, e.target.value)}
-                      placeholder="Enter a sweet message..."
+                      placeholder="اكتب رسالة لطيفة..."
                     />
                   ))}
                 </div>
               </FormSection>
 
-              {/* ── Love Meter Messages ── */}
-              <FormSection title="Love Meter Messages" icon="🌡️" delay={0.2}>
+              {/* ── Memory Photos ── */}
+              <FormSection title="صور الذكريات" icon="📸" delay={0.18}>
                 <p className="text-pink-400 text-xs mb-4">
-                  Messages that appear as they drag the love percentage meter
+                  اختر أجمل صورك لإضافتها في سجل القصاصات
+                </p>
+                <div className="space-y-4">
+                  <FileUploadField
+                    label="ارفع الصورة الرئيسية (تظهر في إطار البولارويد)"
+                    onChange={(e) => handleImageUpload(e, setMainPhoto)}
+                  />
+                  <FileUploadField
+                    label="ارفع صورة غلاف الأغنية (تظهر في مشغل الموسيقى)"
+                    onChange={(e) => handleImageUpload(e, setAlbumCover)}
+                  />
+                </div>
+              </FormSection>
+
+              {/* ── Love Meter Messages ── */}
+              <FormSection title="رسائل مقياس الحب" icon="🌡️" delay={0.2}>
+                <p className="text-pink-400 text-xs mb-4">
+                  الرسائل التي تظهر عند سحب مقياس الحب
                 </p>
                 <div className="space-y-3">
                   <InputField
-                    label="Low (0% - 33%)"
+                    label="منخفض (0% - 33%)"
                     value={meterLow}
                     onChange={(e) => setMeterLow(e.target.value)}
-                    placeholder="Only that much?"
+                    placeholder="لهذه الدرجة فقط؟"
                   />
                   <InputField
-                    label="Medium (34% - 66%)"
+                    label="متوسط (34% - 66%)"
                     value={meterMedium}
                     onChange={(e) => setMeterMedium(e.target.value)}
-                    placeholder="Half? Seriously?"
+                    placeholder="النصف؟ بجدية؟"
                   />
                   <InputField
-                    label="High (67% - 100%)"
+                    label="مرتفع (67% - 100%)"
                     value={meterHigh}
                     onChange={(e) => setMeterHigh(e.target.value)}
-                    placeholder="Aww, that's more like it!"
+                    placeholder="هذا أفضل بكثير!"
                   />
                 </div>
               </FormSection>
 
               {/* ── Love Letter ── */}
-              <FormSection title="Your Love Letter" icon="💌" delay={0.25}>
+              <FormSection title="رسالة حبك" icon="💌" delay={0.25}>
                 <p className="text-pink-400 text-xs mb-4">
-                  Write from the heart — use blank lines to separate paragraphs
+                  اكتب من القلب — استخدم أسطر فارغة للفصل بين الفقرات
                 </p>
                 <textarea
                   value={letterText}
                   onChange={(e) => setLetterText(e.target.value)}
                   rows={10}
-                  placeholder="My Dearest Love,&#10;&#10;Write your letter here..."
-                  className="w-full px-4 py-3 bg-white/80 border-2 border-pink-100 rounded-xl text-pink-800 placeholder-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:outline-none transition-all text-sm font-cursive leading-relaxed resize-none"
+                  placeholder="حبيبتي الغالية،&#10;&#10;اكتب رسالتك هنا..."
+                  className="w-full px-4 py-3 bg-white/80 border-2 border-pink-100 rounded-xl text-pink-800 placeholder-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-200 focus:outline-none transition-all text-sm leading-relaxed resize-none font-arabic"
                 />
               </FormSection>
 
               {/* ── Audio ── */}
-              <FormSection title="Music & Audio" icon="🎵" delay={0.35}>
+              <FormSection title="الموسيقى والصوت" icon="🎵" delay={0.35}>
                 <p className="text-pink-400 text-xs mb-4">
-                  Add a song that's special to both of you
+                  أضف أغنية مميزة لكما
                 </p>
                 <div className="space-y-3">
                   <InputField
-                    label="Track Name"
+                    label="اسم الأغنية"
                     value={trackName}
                     onChange={(e) => setTrackName(e.target.value)}
-                    placeholder="Song Title - Artist"
+                    placeholder="عنوان الأغنية - الفنان"
                   />
                   <InputField
-                    label="Audio URL (MP3 link or YouTube)"
+                    label="رابط أغنية يوتيوب"
                     value={audioUrl}
                     onChange={(e) => setAudioUrl(e.target.value)}
-                    placeholder="https://example.com/song.mp3"
+                    placeholder="https://www.youtube.com/watch?v=..."
                   />
-                  <p className="text-pink-300 text-[10px] italic">
-                    💡 Direct MP3 links will enable real playback. YouTube links will show as display only.
+                  <p className="text-pink-500 font-bold text-[11px]">
+                    ⚡ سيتم تشغيل روابط اليوتيوب وملفات MP3 تلقائياً في صفحة الموسيقى.
                   </p>
                 </div>
               </FormSection>
@@ -333,8 +393,8 @@ export default function CreatorDashboard() {
                   className="w-full py-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 text-white font-bold rounded-2xl shadow-xl shadow-pink-300/50 hover:shadow-pink-400/60 transition-shadow text-lg relative overflow-hidden group"
                 >
                   {/* Shimmer effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  <span className="relative">Generate My Gift 💕</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-full group-hover:-translate-x-full transition-transform duration-700" />
+                  <span className="relative">إنشاء هديتي 💕</span>
                 </motion.button>
               </motion.div>
             </motion.form>
@@ -346,9 +406,9 @@ export default function CreatorDashboard() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-pink-300 text-xs mt-8"
+          className="text-center text-pink-400 text-xs mt-8"
         >
-          Made with ❤️ for the ones we love
+          صُنع بحب ❤️ لمن نحب
         </motion.p>
       </div>
     </div>

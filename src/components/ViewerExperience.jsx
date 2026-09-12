@@ -63,6 +63,8 @@ export default function ViewerExperience() {
         meterHigh: giftData.meterHigh || DEFAULT_GIFT_DATA.meterHigh,
         audioUrl: giftData.audioUrl || DEFAULT_GIFT_DATA.audioUrl,
         trackName: giftData.trackName || DEFAULT_GIFT_DATA.trackName,
+        mainPhoto: giftData.mainPhoto || DEFAULT_GIFT_DATA.mainPhoto,
+        albumCover: giftData.albumCover || DEFAULT_GIFT_DATA.albumCover,
       }
     : DEFAULT_GIFT_DATA
 
@@ -138,12 +140,24 @@ export default function ViewerExperience() {
             <TheBouquet onBack={() => navigateTo('giftHub')} bubbleTexts={mergedData.bubbleTexts} />
           </motion.div>
         )
-      case 'scrapbook':
+      case 'scrapbook': {
+        const parts = (mergedData.trackName || "أغنيتنا - صوت الحب").split("-");
+        const songTitle = parts[0]?.trim() || "أغنيتنا";
+        const artist = parts[1]?.trim() || "صوت الحب";
+        
         return (
           <motion.div key="scrapbook" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full min-h-screen min-h-[100dvh]">
-            <TheScrapbook onBack={() => navigateTo('giftHub')} audioUrl={mergedData.audioUrl} trackName={mergedData.trackName} />
+            <TheScrapbook 
+              onBack={() => navigateTo('giftHub')} 
+              youtubeLink={mergedData.audioUrl}
+              songTitle={songTitle}
+              artist={artist}
+              mainPhoto={mergedData.mainPhoto}
+              albumCover={mergedData.albumCover}
+            />
           </motion.div>
         )
+      }
       case 'letter':
         return (
           <motion.div key="letter" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full min-h-screen min-h-[100dvh]">
