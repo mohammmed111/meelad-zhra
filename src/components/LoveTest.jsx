@@ -32,8 +32,8 @@ export default function LoveTest({ onPass, messages }) {
 
   return (
     /* OUTER: Full-screen background + absolute corner decorations */
-    <div 
-      dir="rtl" 
+    <div
+      dir="rtl"
       className="relative w-full min-h-screen min-h-[100dvh] bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{ backgroundImage: "url('/images/bg.jpg')" }}
     >
@@ -93,17 +93,17 @@ export default function LoveTest({ onPass, messages }) {
 
         {/* Gauge and Slider Container (Forced LTR so 0% is left, 100% is right) */}
         <div dir="ltr" className="w-[350px] sm:w-[450px] flex flex-col items-center">
-          
+
           {/* SVG Love Meter Gauge */}
           <svg viewBox="0 0 400 250" className="w-full overflow-visible" style={{ touchAction: 'none', cursor: 'pointer' }}>
             <defs>
               {/* Soft shadow for inner disc */}
               <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#C11B4B" floodOpacity=".16"/>
+                <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#C11B4B" floodOpacity=".16" />
               </filter>
               {/* Heart symbol */}
               <symbol id="heart" viewBox="0 0 32 30">
-                <path d="M16 28C16 28 2 19.6 2 10.4 2 5.6 5.8 2 10.2 2c2.6 0 4.8 1.3 5.8 3.2C17 3.3 19.2 2 21.8 2 26.2 2 30 5.6 30 10.4 30 19.6 16 28 16 28z"/>
+                <path d="M16 28C16 28 2 19.6 2 10.4 2 5.6 5.8 2 10.2 2c2.6 0 4.8 1.3 5.8 3.2C17 3.3 19.2 2 21.8 2 26.2 2 30 5.6 30 10.4 30 19.6 16 28 16 28z" />
               </symbol>
             </defs>
 
@@ -114,7 +114,7 @@ export default function LoveTest({ onPass, messages }) {
               const SEGMENTS = 6;
               const STEP = 180 / SEGMENTS;
               const GAP = 1.3;
-              const COLORS = ['#F8C8D4','#F3A0B7','#ED7796','#E44E73','#CE2151','#A6103D'];
+              const COLORS = ['#F8C8D4', '#F3A0B7', '#ED7796', '#E44E73', '#CE2151', '#A6103D'];
 
               const polar = (angle, r) => {
                 const a = angle * Math.PI / 180;
@@ -122,10 +122,10 @@ export default function LoveTest({ onPass, messages }) {
               };
 
               const sectorPath = (a0, a1) => {
-                const [x1,y1] = polar(a0, R_OUT);
-                const [x2,y2] = polar(a1, R_OUT);
-                const [x3,y3] = polar(a1, R_IN);
-                const [x4,y4] = polar(a0, R_IN);
+                const [x1, y1] = polar(a0, R_OUT);
+                const [x2, y2] = polar(a1, R_OUT);
+                const [x3, y3] = polar(a1, R_IN);
+                const [x4, y4] = polar(a0, R_IN);
                 return `M${x1} ${y1} A${R_OUT} ${R_OUT} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${R_IN} ${R_IN} 0 0 0 ${x4} ${y4} Z`;
               };
 
@@ -185,9 +185,9 @@ export default function LoveTest({ onPass, messages }) {
                   <g>{hearts}</g>
 
                   {/* Inner half-disc */}
-                  <path d="M108 210 A92 92 0 0 1 292 210 Z" fill="#FFF7F9" filter="url(#soft)"/>
+                  <path d="M108 210 A92 92 0 0 1 292 210 Z" fill="#FFF7F9" filter="url(#soft)" />
                   <text x="200" y="196" textAnchor="middle"
-                        fontFamily="'Great Vibes', cursive" fontSize="62" fill="#C11B4B">love</text>
+                    fontFamily="'Great Vibes', cursive" fontSize="62" fill="#C11B4B">love</text>
 
                   {/* Needle */}
                   <g style={{
@@ -195,8 +195,8 @@ export default function LoveTest({ onPass, messages }) {
                     transformOrigin: `${CX}px ${CY}px`,
                     transition: 'transform .45s cubic-bezier(.34,1.3,.5,1)',
                   }}>
-                    <path d={`M197 ${CY} L200 74 L203 ${CY} Z`} fill="#C11B4B"/>
-                    <circle cx="200" cy={CY} r="13" fill="#fff" stroke="#C11B4B" strokeWidth="4"/>
+                    <path d={`M197 ${CY} L200 74 L203 ${CY} Z`} fill="#C11B4B" />
+                    <circle cx="200" cy={CY} r="13" fill="#fff" stroke="#C11B4B" strokeWidth="4" />
                   </g>
                 </>
               );
@@ -238,7 +238,8 @@ export default function LoveTest({ onPass, messages }) {
       </div>{/* End Inner Content Wrapper */}
 
       {/* Internal Custom Styles for the Love Meter */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Great+Vibes&display=swap');
 
         .love-meter-readout {

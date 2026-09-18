@@ -9,89 +9,67 @@ export default function GiftHub({ onSelectGift }) {
   ]
 
   return (
-    /* Full-screen watercolor background — matches LoveTest page */
     <div
       dir="rtl"
-      className="relative w-full min-h-screen min-h-[100dvh] bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center overflow-hidden px-2 py-6"
+      className="relative w-full min-h-screen min-h-[100dvh] bg-cover bg-center bg-no-repeat flex flex-col items-center overflow-hidden"
       style={{ backgroundImage: "url('/images/bg.jpg')" }}
     >
-      {/* Decorative Corner Images — flowers & birds, subtle and coordinated */}
-      <img
-        src="/images/flowers.png"
-        alt=""
-        className="absolute bottom-0 left-0 w-64 sm:w-80 md:w-96 lg:w-[28rem] h-auto object-contain pointer-events-none drop-shadow-xl opacity-80 z-0"
-      />
-      <img
-        src="/images/bird.png"
-        alt=""
-        className="absolute top-0 right-0 w-64 sm:w-80 md:w-96 lg:w-[28rem] h-auto object-contain pointer-events-none drop-shadow-lg opacity-80 z-0"
-      />
+      {/* Decorative Corner Images */}
+      <img src="/images/bird.png" alt="" className="absolute top-0 right-0 w-48 sm:w-64 md:w-80 lg:w-96 h-auto object-contain pointer-events-none drop-shadow-lg opacity-80 z-0" />
+      <img src="/images/flowers.png" alt="" className="absolute bottom-0 left-0 w-48 sm:w-64 md:w-80 lg:w-96 h-auto object-contain pointer-events-none drop-shadow-xl opacity-80 z-0" />
 
-      {/* Content wrapper — vertically centered, full width */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-6xl mx-auto">
+      {/* Content — title at top, gifts fill remaining space */}
+      <div className="relative z-10 flex flex-col items-center w-full flex-1">
 
-        {/* Main Title — Extra Large */}
-        <motion.h1
-          initial={{ opacity: 0, y: -30, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.15, type: 'spring', stiffness: 160, damping: 14 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-pink-500 mb-8 md:mb-12 text-center drop-shadow-lg font-arabic whitespace-nowrap px-4"
-        >
-          لقد نجحتِ في الاختبار!
-        </motion.h1>
+        {/* Title Block */}
+        <div className="pt-[6vh] sm:pt-[8vh] flex flex-col items-center gap-8">
+          <motion.h1
+            initial={{ opacity: 0, y: -30, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.15, type: 'spring', stiffness: 160, damping: 14 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-pink-500 text-center drop-shadow-lg font-arabic whitespace-nowrap px-4"
+          >
+            لقد نجحتِ في الاختبار!
+          </motion.h1>
 
-        {/* Subtitle — Large and clear */}
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-rose-800 mb-12 md:mb-20 text-center font-arabic"
-        >
-          مفاجآتكِ في انتظاركِ ✨
-        </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-rose-800 mt-2 sm:mt-4 text-center font-arabic"
+          >
+            مفاجآتكِ في انتظاركِ ✨
+          </motion.p>
+        </div>
 
-        {/* Giant Gift Boxes Row — spread across full width */}
-        <div className="flex flex-row justify-center items-end gap-2 sm:gap-4 md:gap-8 w-full px-2 sm:px-8 mt-4 md:mt-8">
-          {gifts.map((gift, i) => {
-            const isCenter = i === 1
-            return (
+        {/* Gifts — centered in remaining space, edge-to-edge */}
+        <div className="flex-1 flex items-center justify-center w-full px-4 sm:px-8 md:px-12 py-4">
+          <div className="flex flex-row justify-between items-center w-full max-w-[1400px] gap-6 sm:gap-8 md:gap-12">
+            {gifts.map((gift, i) => (
               <motion.div
                 key={gift.key}
                 initial={{ opacity: 0, y: 60, scale: 0.6 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{
-                  delay: 0.4 + i * 0.18,
-                  type: 'spring',
-                  stiffness: 170,
-                  damping: 14,
+                animate={{
+                  opacity: 1, y: 0, scale: 1,
+                  transition: { delay: 0.4 + i * 0.18, type: 'spring', stiffness: 300, damping: 20 }
                 }}
-                whileHover={{ scale: 1.08, y: -15, transition: { duration: 0.1 } }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.08, y: -15, transition: { type: 'tween', duration: 0.15, ease: 'easeOut' } }}
+                whileTap={{ scale: 0.95, transition: { type: 'tween', duration: 0.1 } }}
+                transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
                 onClick={() => onSelectGift(gift.key)}
-                className={`cursor-pointer flex flex-col items-center flex-1 ${isCenter ? 'z-10' : '-translate-y-6 md:-translate-y-12 lg:-translate-y-16 z-0'}`}
+                className="cursor-pointer flex items-center justify-center flex-1"
               >
-                {/* Gift Image — MASSIVE, filling available space */}
                 <img
                   src="/images/gift.png"
                   alt={gift.label}
-                  className={`w-full h-auto object-contain cursor-pointer transition-all duration-75 ease-in-out drop-shadow-2xl ${isCenter ? 'max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px]' : 'max-w-[220px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[420px]'}`}
+                  className="w-full max-w-[195px] sm:max-w-[240px] md:max-w-[285px] lg:max-w-[315px] h-auto object-contain drop-shadow-2xl"
                 />
               </motion.div>
-            )
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Tap hint — subtle pulsing, below gifts */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0.5, 1] }}
-          transition={{ delay: 1.4, duration: 2, repeat: Infinity }}
-          className="mt-8 md:mt-12 text-rose-700 text-lg md:text-xl font-semibold font-arabic"
-        >
-          اضغطي على الهدية لفتحها 🎁
-        </motion.p>
-
-      </div>{/* End Content Wrapper */}
+      </div>
     </div>
   )
 }
