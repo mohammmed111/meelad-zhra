@@ -30,10 +30,6 @@ export default function LoveTest({ onPass, messages }) {
   const { gifSrc, text, mood } = getMoodState(value, messages);
   const showNext = value >= 100;
 
-  // Gauge Segments Math — arc radius 160, half-circle = PI * 160 ≈ 502.65
-  const arcLength = 502.65;
-  const segmentLength = arcLength / 5;
-
   return (
     /* OUTER: Full-screen background + absolute corner decorations */
     <div 
@@ -83,13 +79,14 @@ export default function LoveTest({ onPass, messages }) {
           </motion.p>
         </AnimatePresence>
 
-        {/* Percentage Display */}
+        {/* Percentage Readout */}
         <motion.div
-          className="text-[50px] sm:text-[60px] font-black text-rose-900 tabular-nums tracking-wide leading-none font-arabic"
+          className="love-meter-readout"
           key={value}
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.1 }}
+          style={{ direction: 'ltr' }}
         >
           {value}%
         </motion.div>
@@ -97,90 +94,124 @@ export default function LoveTest({ onPass, messages }) {
         {/* Gauge and Slider Container (Forced LTR so 0% is left, 100% is right) */}
         <div dir="ltr" className="w-[350px] sm:w-[450px] flex flex-col items-center">
           
-          {/* SVG Custom Speedometer Gauge — Scaled Up */}
-          <svg viewBox="0 0 420 200" className="w-full drop-shadow-lg overflow-visible">
-            {/* Slice 1: #fbcfe8 */}
-            <path 
-              d="M 50 185 A 160 160 0 0 1 370 185" 
-              fill="none" 
-              stroke="#fbcfe8" 
-              strokeWidth="26" 
-              strokeDasharray={`${segmentLength} 600`} 
-              strokeDashoffset={0} 
-              strokeLinecap="butt"
-              opacity={value >= 0 ? 1 : 0.3}
-              className="transition-opacity duration-300"
-            />
-            {/* Slice 2: #f472b6 */}
-            <path 
-              d="M 50 185 A 160 160 0 0 1 370 185" 
-              fill="none" 
-              stroke="#f472b6" 
-              strokeWidth="26" 
-              strokeDasharray={`${segmentLength} 600`} 
-              strokeDashoffset={-segmentLength}
-              strokeLinecap="butt"
-              opacity={value >= 20 ? 1 : 0.3}
-              className="transition-opacity duration-300"
-            />
-            {/* Slice 3: #ec4899 */}
-            <path 
-              d="M 50 185 A 160 160 0 0 1 370 185" 
-              fill="none" 
-              stroke="#ec4899" 
-              strokeWidth="26" 
-              strokeDasharray={`${segmentLength} 600`} 
-              strokeDashoffset={-segmentLength * 2}
-              strokeLinecap="butt"
-              opacity={value >= 40 ? 1 : 0.3}
-              className="transition-opacity duration-300"
-            />
-            {/* Slice 4: #be185d */}
-            <path 
-              d="M 50 185 A 160 160 0 0 1 370 185" 
-              fill="none" 
-              stroke="#be185d" 
-              strokeWidth="26" 
-              strokeDasharray={`${segmentLength} 600`} 
-              strokeDashoffset={-segmentLength * 3}
-              strokeLinecap="butt"
-              opacity={value >= 60 ? 1 : 0.3}
-              className="transition-opacity duration-300"
-            />
-            {/* Slice 5: #831843 */}
-            <path 
-              d="M 50 185 A 160 160 0 0 1 370 185" 
-              fill="none" 
-              stroke="#831843" 
-              strokeWidth="26" 
-              strokeDasharray={`${segmentLength} 600`} 
-              strokeDashoffset={-segmentLength * 4}
-              strokeLinecap="butt"
-              opacity={value >= 80 ? 1 : 0.3}
-              className="transition-opacity duration-300"
-            />
+          {/* SVG Love Meter Gauge */}
+          <svg viewBox="0 0 400 250" className="w-full overflow-visible" style={{ touchAction: 'none', cursor: 'pointer' }}>
+            <defs>
+              {/* Soft shadow for inner disc */}
+              <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#C11B4B" floodOpacity=".16"/>
+              </filter>
+              {/* Heart symbol */}
+              <symbol id="heart" viewBox="0 0 32 30">
+                <path d="M16 28C16 28 2 19.6 2 10.4 2 5.6 5.8 2 10.2 2c2.6 0 4.8 1.3 5.8 3.2C17 3.3 19.2 2 21.8 2 26.2 2 30 5.6 30 10.4 30 19.6 16 28 16 28z"/>
+              </symbol>
+            </defs>
 
-            {/* Cursive "love" text inside bottom center */}
-            <text 
-              x="210" 
-              y="180" 
-              fontSize="44" 
-              fill="#831843" 
-              textAnchor="middle" 
-              style={{ fontFamily: "'Marhey', 'Great Vibes', cursive", fontWeight: 400 }}
-            >
-              حب
-            </text>
+            {/* 6 Annular Segments */}
+            {(() => {
+              const CX = 200, CY = 210;
+              const R_IN = 96, R_OUT = 152;
+              const SEGMENTS = 6;
+              const STEP = 180 / SEGMENTS;
+              const GAP = 1.3;
+              const COLORS = ['#F8C8D4','#F3A0B7','#ED7796','#E44E73','#CE2151','#A6103D'];
+
+              const polar = (angle, r) => {
+                const a = angle * Math.PI / 180;
+                return [CX + r * Math.cos(a), CY - r * Math.sin(a)];
+              };
+
+              const sectorPath = (a0, a1) => {
+                const [x1,y1] = polar(a0, R_OUT);
+                const [x2,y2] = polar(a1, R_OUT);
+                const [x3,y3] = polar(a1, R_IN);
+                const [x4,y4] = polar(a0, R_IN);
+                return `M${x1} ${y1} A${R_OUT} ${R_OUT} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${R_IN} ${R_IN} 0 0 0 ${x4} ${y4} Z`;
+              };
+
+              const reached = value / 100 * SEGMENTS;
+
+              const segments = [];
+              for (let i = 0; i < SEGMENTS; i++) {
+                const start = 180 - i * STEP - GAP / 2;
+                const end = 180 - (i + 1) * STEP + GAP / 2;
+                const active = reached >= i + 0.5;
+                segments.push(
+                  <path
+                    key={`seg-${i}`}
+                    d={sectorPath(start, end)}
+                    fill={COLORS[i]}
+                    stroke={COLORS[i]}
+                    strokeWidth="7"
+                    strokeLinejoin="round"
+                    style={{
+                      opacity: active ? 1 : 0.28,
+                      transform: active ? 'scale(1)' : 'scale(0.985)',
+                      transformOrigin: `${CX}px ${CY}px`,
+                      transition: 'transform .45s cubic-bezier(.34,1.3,.5,1), opacity .3s ease',
+                    }}
+                  />
+                );
+              }
+
+              // Hearts at arc ends
+              const heartData = [
+                { angle: 166, opacity: 0.55, fill: '#E98AA6' },
+                { angle: 14, opacity: 1, fill: '#fff' },
+              ];
+              const hearts = heartData.map((h, i) => {
+                const [x, y] = polar(h.angle, 124);
+                return (
+                  <use
+                    key={`heart-${i}`}
+                    href="#heart"
+                    width="26"
+                    height="24"
+                    x={x - 13}
+                    y={y - 12}
+                    fill={h.fill}
+                    opacity={h.opacity}
+                    transform={`rotate(${90 - h.angle} ${x} ${y})`}
+                  />
+                );
+              });
+
+              // Needle rotation: 0% = -90deg (left), 100% = +90deg (right)
+              const needleRotation = (value / 100) * 180 - 90;
+
+              return (
+                <>
+                  <g>{segments}</g>
+                  <g>{hearts}</g>
+
+                  {/* Inner half-disc */}
+                  <path d="M108 210 A92 92 0 0 1 292 210 Z" fill="#FFF7F9" filter="url(#soft)"/>
+                  <text x="200" y="196" textAnchor="middle"
+                        fontFamily="'Great Vibes', cursive" fontSize="62" fill="#C11B4B">love</text>
+
+                  {/* Needle */}
+                  <g style={{
+                    transform: `rotate(${needleRotation}deg)`,
+                    transformOrigin: `${CX}px ${CY}px`,
+                    transition: 'transform .45s cubic-bezier(.34,1.3,.5,1)',
+                  }}>
+                    <path d={`M197 ${CY} L200 74 L203 ${CY} Z`} fill="#C11B4B"/>
+                    <circle cx="200" cy={CY} r="13" fill="#fff" stroke="#C11B4B" strokeWidth="4"/>
+                  </g>
+                </>
+              );
+            })()}
           </svg>
 
-          {/* Custom Range Slider — Wider to match gauge */}
+          {/* Custom Range Slider */}
           <input
             type="range"
             min="0"
             max="100"
             value={value}
             onChange={(e) => setValue(Number(e.target.value))}
-            className="custom-love-slider w-full px-2 mt-1"
+            className="love-meter-slider"
+            style={{ '--fill': `${value}%` }}
           />
         </div>
 
@@ -206,56 +237,80 @@ export default function LoveTest({ onPass, messages }) {
 
       </div>{/* End Inner Content Wrapper */}
 
-      {/* Internal Custom Styles for the Slider */}
+      {/* Internal Custom Styles for the Love Meter */}
       <style dangerouslySetInnerHTML={{__html: `
-        .custom-love-slider {
-          appearance: none;
-          background: transparent;
-          outline: none;
-          cursor: pointer;
-        }
-        
-        /* WebKit (Chrome, Safari, Edge) */
-        .custom-love-slider::-webkit-slider-runnable-track {
-          width: 100%;
-          height: 10px;
-          background: #fbcfe8;
-          border-radius: 9999px;
-          border: none;
-        }
-        .custom-love-slider::-webkit-slider-thumb {
-          appearance: none;
-          width: 40px;
-          height: 40px;
-          background: #831843;
-          border-radius: 50%;
-          margin-top: -15px;
-          box-shadow: 0 4px 14px rgba(131, 24, 67, 0.5);
-          transition: transform 0.1s ease;
-        }
-        .custom-love-slider::-webkit-slider-thumb:active {
-          transform: scale(1.18);
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Great+Vibes&display=swap');
+
+        .love-meter-readout {
+          font-family: 'Baloo 2', system-ui, sans-serif;
+          font-size: clamp(34px, 11vw, 46px);
+          font-weight: 800;
+          color: #C11B4B;
+          line-height: 1;
+          letter-spacing: 0.5px;
+          margin-bottom: 6px;
+          font-variant-numeric: tabular-nums;
         }
 
-        /* Firefox */
-        .custom-love-slider::-moz-range-track {
+        .love-meter-slider {
+          -webkit-appearance: none;
+          appearance: none;
           width: 100%;
-          height: 10px;
-          background: #fbcfe8;
-          border-radius: 9999px;
-          border: none;
+          height: 26px;
+          margin-top: 14px;
+          background: transparent;
+          direction: ltr;
+          cursor: grab;
         }
-        .custom-love-slider::-moz-range-thumb {
-          width: 40px;
-          height: 40px;
-          background: #831843;
+        .love-meter-slider:active { cursor: grabbing; }
+
+        /* Track */
+        .love-meter-slider::-webkit-slider-runnable-track {
+          height: 6px;
+          border-radius: 99px;
+          background: linear-gradient(to right,
+            #C11B4B 0% var(--fill, 0%), #F6CCD7 var(--fill, 0%) 100%);
+        }
+        .love-meter-slider::-moz-range-track {
+          height: 6px;
+          border-radius: 99px;
+          background: #F6CCD7;
+        }
+        .love-meter-slider::-moz-range-progress {
+          height: 6px;
+          border-radius: 99px;
+          background: #C11B4B;
+        }
+
+        /* Thumb */
+        .love-meter-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 18px;
+          height: 18px;
+          margin-top: -6px;
           border-radius: 50%;
-          border: none;
-          box-shadow: 0 4px 14px rgba(131, 24, 67, 0.5);
-          transition: transform 0.1s ease;
+          background: #C11B4B;
+          border: 3px solid #fff;
+          box-shadow: 0 2px 6px rgba(166, 16, 61, 0.35);
         }
-        .custom-love-slider::-moz-range-thumb:active {
-          transform: scale(1.18);
+        .love-meter-slider::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border: 3px solid #fff;
+          border-radius: 50%;
+          background: #C11B4B;
+          box-shadow: 0 2px 6px rgba(166, 16, 61, 0.35);
+        }
+        .love-meter-slider:focus-visible { outline: none; }
+        .love-meter-slider:focus-visible::-webkit-slider-thumb {
+          box-shadow: 0 0 0 4px rgba(193, 27, 75, 0.28);
+        }
+        .love-meter-slider:focus-visible::-moz-range-thumb {
+          box-shadow: 0 0 0 4px rgba(193, 27, 75, 0.28);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .love-meter-slider, svg path, svg g { transition: none !important; }
         }
       `}} />
     </div>
