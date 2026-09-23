@@ -5,7 +5,7 @@ import FloatingHearts from './components/FloatingHearts'
 
 function App() {
   return (
-    <div className="relative w-full min-h-screen min-h-[100dvh] overflow-hidden">
+    <div className="relative w-full min-h-screen min-h-[100dvh] overflow-x-hidden">
       <FloatingHearts />
       <Routes>
         <Route path="/" element={<CreatorDashboard />} />
